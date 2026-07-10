@@ -27,5 +27,5 @@ spring:
 # ─── JWT ────────────────────────────────────────────────────
 app:
   jwt:
-    secret: 'm0v13s4pp$3cr3tK3y!2024#xYzAb12'
+    secret: 'm0v13s4pp$3cr3tK3y!2024#xYzAb12X'
     expiration-ms: 86400000
