@@ -1,0 +1,31 @@
+# ─── Servidor ───────────────────────────────────────────────
+server:
+  port: 8080
+
+# ─── Aplicación ───────────────────────────────────────────────
+spring:
+  application:
+    name: movies
+
+# ─── Base de datos ──────────────────────────────────────────
+  datasource:
+    url: jdbc:mysql://localhost:3306/movies?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: root
+    password: my-secret-pw
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  
+# ─── JPA / Hibernate ────────────────────────────────────────
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+
+# ─── JWT ────────────────────────────────────────────────────
+app:
+  jwt:
+    secret: 'm0v13s4pp$3cr3tK3y!2024#xYzAb12'
+    expiration-ms: 86400000
