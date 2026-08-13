@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -58,10 +57,28 @@ public class MovieHelper {
                 .build();
     }
 
+    public Movie toUpdateData(Movie movie, MovieRequest request){
+        return Movie.builder()
+                .id(movie.getId())
+                .title(isStringValid(request.getTitle()) ? request.getTitle() : movie.getTitle())
+                .description(isStringValid(request.getDescription()) ? request.getDescription() : movie.getDescription())
+                .genre(isStringValid(request.getGenre()) ? request.getGenre() : movie.getGenre())
+                .releaseYear(request.getReleaseYear() != null ? request.getReleaseYear() : movie.getReleaseYear())
+                .posterUrl(isStringValid(request.getPosterUrl()) ? request.getPosterUrl() : movie.getPosterUrl())
+                .ratingSum(movie.getRatingSum())
+                .ratingCount(movie.getRatingCount())
+                .createdAt(movie.getCreatedAt())
+                .updatedAt(movie.getUpdatedAt())
+                .build();
+    }
+
     private BigDecimal getAverage(BigDecimal averageSum, Integer count) {
-
+        if (count == 0) return BigDecimal.ZERO;
         return averageSum.divide(new BigDecimal(count), 2, RoundingMode.HALF_UP);
+    }
 
+    private Boolean isStringValid(String value){
+        return value != null && !value.trim().isEmpty();
     }
 
 }
