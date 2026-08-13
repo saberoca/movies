@@ -6,11 +6,12 @@ import com.saints.movies.movie.dto.MovieResponse;
 import com.saints.movies.movie.helper.MovieHelper;
 import com.saints.movies.movie.model.Movie;
 import com.saints.movies.movie.repository.MovieRepository;
+import com.saints.movies.movie.specification.MovieSpecification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,29 +20,11 @@ public class MovieService {
     private final MovieRepository movieRepository;
     private final MovieHelper movieHelper;
 
-    public List<MovieResponse> getAllMovies() {
-        return movieHelper.toListResponse(movieRepository.findAll());
-    }
-
     public MovieResponse getMovieById(Long id) {
 
-        Optional<Movie> movie = movieRepository.findById(id);
-        return movie
+        return movieRepository.findById(id)
                 .map(movieHelper::toSingleResponse)
-                .orElseThrow(
-                        () -> new ResourceNotFoundException("Pelicula no encontrada con id: " + id));
-    }
-
-    public List<MovieResponse> getMoviesByGenre(String genre) {
-        return movieHelper.toListResponse(movieRepository.findByGenreIgnoreCase(genre));
-    }
-
-    public List<MovieResponse> getMoviesByYear(Integer year) {
-        return movieHelper.toListResponse(movieRepository.findByReleaseYear(year));
-    }
-
-    public List<MovieResponse> searchMovies(String title) {
-        return movieHelper.toListResponse(movieRepository.findByTitleContainingIgnoreCase(title));
+                .orElseThrow(() -> new ResourceNotFoundException("Pelicula no encontrada con id: " + id));
     }
 
     public MovieResponse createMovie(MovieRequest request) {
@@ -49,14 +32,26 @@ public class MovieService {
     }
 
     public MovieResponse updateMovie(Long id, MovieRequest request) {
-        Movie movie = movieRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Pelicula no encontrada con id: " + id));
+        Movie movie = movieRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Pelicula no encontrada con id: " + id));
         Movie movieSaved = movieRepository.save(movieHelper.toUpdateData(movie, request));
         return movieHelper.toSingleResponse(movieSaved);
     }
 
     public void deleteMovie(Long id) {
-        movieRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Pelicula no encontrada con id: " + id));
-        movieRepository.deleteById(id);
+        Movie movie = movieRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Pelicula no encontrada con id: " + id));
+        movieRepository.delete(movie);
     }
+
+    public List<MovieResponse> getMovies(String genre, Integer year, String title){
+        // conjunción() equivale a WHERE 1=1, siempre verdadero
+        // es el punto de partida seguro para encadenar condiciones
+        Specification<Movie> specification = ((Specification<Movie>) (root, query, cb) -> cb.conjunction())
+                .and(MovieSpecification.hasGenre(genre))
+                .and(MovieSpecification.hasTitle(title))
+                .and(MovieSpecification.hasYear(year));
+        return movieHelper.toListResponse(movieRepository.findAll(specification));
+    }
+
 
 }

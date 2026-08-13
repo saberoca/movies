@@ -55,16 +55,6 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.BAD_REQUEST, message, null);
     }
 
-    // ─── Error genérico ──────────────────────────────────────────
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, Object>> handleGenericException(Exception ex) {
-        return buildResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR,
-                "Error interno del servidor",
-                null
-        );
-    }
-
     // ─── Builder de respuesta ────────────────────────────────────
     private ResponseEntity<Map<String, Object>> buildResponse(
             HttpStatus status,
@@ -95,5 +85,15 @@ public class GlobalExceptionHandler {
             ResourceNotFoundException ex
     ) {
         return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage(), null);
+    }
+
+    // ─── Error genérico ──────────────────────────────────────────
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, Object>> handleGenericException(Exception ex) {
+        return buildResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "Error interno del servidor",
+                null
+        );
     }
 }

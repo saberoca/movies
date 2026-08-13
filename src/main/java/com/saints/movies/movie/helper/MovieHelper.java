@@ -12,22 +12,9 @@ import java.util.List;
 @Component
 public class MovieHelper {
 
-    public List<MovieResponse> toListResponse(List<Movie> movie) {
-        return movie.stream()
-                .map(movies -> {
-                    return MovieResponse.builder()
-                            .id(movies.getId())
-                            .title(movies.getTitle())
-                            .description(movies.getDescription())
-                            .genre(movies.getGenre())
-                            .releaseYear(movies.getReleaseYear())
-                            .posterUrl(movies.getPosterUrl())
-                            .averageRating(getAverage(movies.getRatingSum(), movies.getRatingCount()))
-                            .ratingCount(movies.getRatingCount())
-                            .createdAt(movies.getCreatedAt())
-                            .updatedAt(movies.getUpdatedAt())
-                            .build();
-                })
+    public List<MovieResponse> toListResponse(List<Movie> movies) {
+        return movies.stream()
+                .map(this::toSingleResponse)
                 .toList();
     }
 
@@ -65,8 +52,10 @@ public class MovieHelper {
                 .genre(isStringValid(request.getGenre()) ? request.getGenre() : movie.getGenre())
                 .releaseYear(request.getReleaseYear() != null ? request.getReleaseYear() : movie.getReleaseYear())
                 .posterUrl(isStringValid(request.getPosterUrl()) ? request.getPosterUrl() : movie.getPosterUrl())
+                // Preservar datos de rating — nunca se actualizan desde el request
                 .ratingSum(movie.getRatingSum())
                 .ratingCount(movie.getRatingCount())
+                // Preservar auditoría
                 .createdAt(movie.getCreatedAt())
                 .updatedAt(movie.getUpdatedAt())
                 .build();
