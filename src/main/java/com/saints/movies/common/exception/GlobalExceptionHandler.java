@@ -8,6 +8,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -85,6 +87,11 @@ public class GlobalExceptionHandler {
             ResourceNotFoundException ex
     ) {
         return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage(), null);
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<Map<String, Object>> resourseNotFound(NoResourceFoundException ex){
+        return buildResponse(HttpStatus.NOT_FOUND, "Endpoint no encontrado", ex.getMessage());
     }
 
     // ─── Error genérico ──────────────────────────────────────────

@@ -31,7 +31,7 @@ public class MovieSpecification {
             if (title == null || title.isBlank()) {
                 return null; // ← este filtro se ignora
             }
-            return cb.like(root.get("title"), title);
+            return cb.like(root.get("title"),  "%" + title.toLowerCase() + "%");
         };
     }
 }
