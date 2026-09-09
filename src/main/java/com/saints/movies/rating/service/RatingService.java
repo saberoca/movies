@@ -1,5 +1,6 @@
 package com.saints.movies.rating.service;
 
+import com.saints.movies.common.event.RankingUpdatedEvent;
 import com.saints.movies.common.exception.ResourceNotFoundException;
 import com.saints.movies.movie.model.Movie;
 import com.saints.movies.movie.repository.MovieRepository;
@@ -12,10 +13,12 @@ import com.saints.movies.rating.repository.RatingRepository;
 import com.saints.movies.user.model.User;
 import com.saints.movies.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Optional;
 
 
@@ -28,6 +31,7 @@ public class RatingService {
     private final RatingHelper ratingHelper;
     private final MovieRepository movieRepository;
     private final UserRepository userRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     public RatingResponse voteMovie(RatingRequest request, Long userId){
@@ -39,9 +43,16 @@ public class RatingService {
             BigDecimal previousScore = rating.getScore();
             rating.getMovie().setRatingSum(rating.getMovie().getRatingSum().subtract(previousScore).add(request.getScore()));
             rating.setScore(request.getScore());
-            movieRepository.save(rating.getMovie());
+            Movie movie = movieRepository.save(rating.getMovie());
             Rating savedRating = ratingRepository.save(rating);
             ratingHistoryRepository.save(ratingHelper.toRatingHistory(rating, previousScore));
+            eventPublisher.publishEvent(new RankingUpdatedEvent(
+                    this,
+                    movie.getId(),
+                    movie.getTitle(),
+                    ratingHelper.calculateAverage(movie.getRatingSum(), movie.getRatingCount()),
+                    movie.getRatingCount()
+            ));
             return ratingHelper.toResponse(savedRating);
         } else {
             User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrada con id: " + userId));
@@ -54,8 +65,16 @@ public class RatingService {
                     .movie(movie)
                     .score(request.getScore())
                     .build();
+            Rating savedRating = ratingRepository.save(rating);
             ratingHistoryRepository.save(ratingHelper.toRatingHistory(rating, null));
-            return ratingHelper.toResponse(ratingRepository.save(rating));
+            eventPublisher.publishEvent(new RankingUpdatedEvent(
+                    this,
+                    movie.getId(),
+                    movie.getTitle(),
+                    ratingHelper.calculateAverage(movie.getRatingSum(), movie.getRatingCount()),
+                    movie.getRatingCount()
+            ));
+            return ratingHelper.toResponse(savedRating);
         }
     }
 

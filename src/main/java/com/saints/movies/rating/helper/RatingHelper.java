@@ -6,6 +6,7 @@ import com.saints.movies.rating.model.RatingHistory;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Component
 public class RatingHelper {
@@ -29,6 +30,13 @@ public class RatingHelper {
                 .previousScore(previousScore)
                 .newScore(rating.getScore())
                 .build();
+    }
+
+    public BigDecimal calculateAverage(BigDecimal ratingSum, Integer ratingCount) {
+        if (ratingCount == 0) return BigDecimal.ZERO;
+        return ratingSum.divide(
+                new BigDecimal(ratingCount), 2, RoundingMode.HALF_UP
+        );
     }
 
 }
