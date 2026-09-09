@@ -55,6 +55,8 @@ public class MovieController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = ApiConstants.CREATED, description = ApiConstants.CREATED_MESSAGE),
             @ApiResponse(responseCode = ApiConstants.BAD_REQUEST, description = ApiConstants.BAD_REQUEST_MESSAGE),
+            @ApiResponse(responseCode = ApiConstants.UNAUTHORIZED, description = ApiConstants.UNAUTHORIZED_MESSAGE),
+            @ApiResponse(responseCode = ApiConstants.FORBIDDEN, description = ApiConstants.FORBIDDEN_MESSAGE),
             @ApiResponse(responseCode = ApiConstants.RESOURCE_NOT_FOUND, description = ApiConstants.RESOURCE_NOT_FOUND_MESSAGE),
             @ApiResponse(responseCode = ApiConstants.INTERNAL_ERROR, description = ApiConstants.INTERNAL_ERROR_MESSAGE)
     })
@@ -68,6 +70,8 @@ public class MovieController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = ApiConstants.SUCCESSFUL, description = ApiConstants.SUCCESSFUL_MESSAGE),
             @ApiResponse(responseCode = ApiConstants.BAD_REQUEST, description = ApiConstants.BAD_REQUEST_MESSAGE),
+            @ApiResponse(responseCode = ApiConstants.UNAUTHORIZED, description = ApiConstants.UNAUTHORIZED_MESSAGE),
+            @ApiResponse(responseCode = ApiConstants.FORBIDDEN, description = ApiConstants.FORBIDDEN_MESSAGE),
             @ApiResponse(responseCode = ApiConstants.RESOURCE_NOT_FOUND, description = ApiConstants.RESOURCE_NOT_FOUND_MESSAGE),
             @ApiResponse(responseCode = ApiConstants.INTERNAL_ERROR, description = ApiConstants.INTERNAL_ERROR_MESSAGE)
     })
@@ -80,6 +84,8 @@ public class MovieController {
     @Operation(summary = "Eliminar pelicula", description = "Eliminar pelicula por id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = ApiConstants.NO_CONTENT, description = ApiConstants.NO_CONTENT_MESSAGE),
+            @ApiResponse(responseCode = ApiConstants.UNAUTHORIZED, description = ApiConstants.UNAUTHORIZED_MESSAGE),
+            @ApiResponse(responseCode = ApiConstants.FORBIDDEN, description = ApiConstants.FORBIDDEN_MESSAGE),
             @ApiResponse(responseCode = ApiConstants.RESOURCE_NOT_FOUND, description = ApiConstants.RESOURCE_NOT_FOUND_MESSAGE),
             @ApiResponse(responseCode = ApiConstants.INTERNAL_ERROR, description = ApiConstants.INTERNAL_ERROR_MESSAGE)
     })
