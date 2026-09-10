@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -79,6 +81,21 @@ public class GlobalExceptionHandler {
             IllegalArgumentException ex
     ) {
         return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), null);
+    }
+
+    // ─── Errores para usuario no autorizado ───────────────────────────
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<Map<String, Object>> handleAuthorizationDenied(
+            AuthorizationDeniedException ex
+    ) {
+        return buildResponse(HttpStatus.FORBIDDEN, "No tiene permisos para realizar esta operación", null);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Map<String, Object>> handleAccessDenied(
+            AccessDeniedException ex
+    ) {
+        return buildResponse(HttpStatus.FORBIDDEN, ex.getMessage(), null);
     }
 
     // ─── Errores para recurso no encontrado ───────────────────────────

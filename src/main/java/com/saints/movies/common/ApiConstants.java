@@ -5,6 +5,10 @@ public class ApiConstants {
     // Tags
     public static final String MOVIE_TAG = "Movie";
     public static final String MOVIE_DESCRIPTION = "Operaciones sobre películas";
+    public static final String RATING_TAG = "Rating";
+    public static final String RATING_DESCRIPTION = "Operaciones sobre rating";
+    public static final String AUTH_TAG = "Auth";
+    public static final String AUTH_DESCRIPTION = "Operaciones de autenticación y registro";
 
     // Códigos de respuesta
     public static final String SUCCESSFUL = "200";

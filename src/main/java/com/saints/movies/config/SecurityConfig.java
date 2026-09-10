@@ -1,5 +1,7 @@
 package com.saints.movies.config;
 
+import com.saints.movies.security.CustomAccessDeniedHandler;
+import com.saints.movies.security.CustomAuthenticationEntryPoint;
 import com.saints.movies.security.filter.JwtAuthFilter;
 import com.saints.movies.security.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,8 @@ public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
     private final UserDetailsServiceImpl userDetailsService;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -44,6 +48,10 @@ public class SecurityConfig {
                                 "/v3/api-docs"
                         ).permitAll()
                         .anyRequest().authenticated()
+                )
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)
+                        .accessDeniedHandler(customAccessDeniedHandler)
                 )
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

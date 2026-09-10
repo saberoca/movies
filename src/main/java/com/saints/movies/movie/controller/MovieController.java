@@ -29,6 +29,7 @@ public class MovieController {
     @Operation(summary = "Busca peliculas con filtro opcional", description = "Busca todas las peliculas con filtro opcional filtro = {genero, titulo, año}")
     @ApiResponses(value = {
             @ApiResponse(responseCode = ApiConstants.SUCCESSFUL, description = ApiConstants.SUCCESSFUL_MESSAGE),
+            @ApiResponse(responseCode = ApiConstants.FORBIDDEN, description = ApiConstants.FORBIDDEN_MESSAGE),
             @ApiResponse(responseCode = ApiConstants.RESOURCE_NOT_FOUND, description = ApiConstants.RESOURCE_NOT_FOUND_MESSAGE),
             @ApiResponse(responseCode = ApiConstants.INTERNAL_ERROR, description = ApiConstants.INTERNAL_ERROR_MESSAGE)
     })
@@ -42,6 +43,7 @@ public class MovieController {
     @Operation(summary = "Busca pelicula por id", description = "Busca una pelicula por el id de la pelicula")
     @ApiResponses(value = {
             @ApiResponse(responseCode = ApiConstants.SUCCESSFUL, description = ApiConstants.SUCCESSFUL_MESSAGE),
+            @ApiResponse(responseCode = ApiConstants.FORBIDDEN, description = ApiConstants.FORBIDDEN_MESSAGE),
             @ApiResponse(responseCode = ApiConstants.RESOURCE_NOT_FOUND, description = ApiConstants.RESOURCE_NOT_FOUND_MESSAGE),
             @ApiResponse(responseCode = ApiConstants.INTERNAL_ERROR, description = ApiConstants.INTERNAL_ERROR_MESSAGE)
     })
